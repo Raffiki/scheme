@@ -1,0 +1,43 @@
+#lang scheme
+(define (1- x) (- x 1))
+(define (1+ x) (+ 1 x))
+
+(define (rec-add x y)
+  (if (= 0 y) x
+      (rec-add (1+ x) (1- y))))
+
+(define (iter-add-helper result x y)
+  (iter-add result y))
+
+(define (iter-add x y)
+  (if (= 0 y) x
+      (iter-add-helper (1+ x) x (1- y))))
+
+(define (iter-multiply-helper result x y)
+        (if (= 0 y) result
+            (iter-multiply-helper (+ result x) x (1- y))))
+
+(define (iter-multiply x y)
+  (iter-multiply-helper 0 x y))
+
+(define (rec-multiply x y)
+  (if (= 0 y) 0
+      (+ x (rec-multiply x (1- y)))))
+
+(define (double x) (+ x x))
+
+(define (halve x) (/ x 2))
+
+(define (rec-fast-multiply x y)
+  (if (= 0 y) 0
+      (if (= 0 (remainder y 2))
+          (rec-fast-multiply (double x) (halve y))
+          (+ x (rec-fast-multiply x (1- y)))))
+
+(ldefine (iter-fast-multiply-helper x y)
+  )
+(define (iter-fast-multiply x y)
+  (if (= 0 y) 0
+      (if (even? (halve y))
+          (rec-fast-multiply (double x) (halve y))
+          (+ x (rec-fast-multiply x (1- y)))))

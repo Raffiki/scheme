@@ -1,0 +1,23 @@
+#lang scheme
+(define (1- x) (- x 1))
+(define (1+ x) (+ 1 x))
+ 
+(define (rec-add x y)
+  (if (= 0 y) x
+      (rec-add (1+ x) (1- y))))
+
+(define (iter-add-helper result x y)
+  (iter-add result y))
+
+(define (iter-add x y)
+  (if (= 0 y) x
+      (iter-add-helper (1+ x) x (1- y))))
+
+(define (iter-multiply-helper result x y)
+        (if (= 0 y) result
+            (iter-multiply-helper (+ result x) x (1- y))))
+
+(define (iter-multiply x y)
+  (iter-multiply-helper 0 x y))
+
+(define (rec-multiply x y))
