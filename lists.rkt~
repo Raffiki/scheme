@@ -70,19 +70,3 @@
 
 
 ;;5.10
-(define (change e1 e2 l)
-  (if (null? l)
-      '()
-      (if (eq? e1 (car l))
-          (cons e2 (change e1 e2 (cdr l)))
-          (cons (car l) (change e1 e2 (cdr l)))
-          )))
-
-(change 1 999 '(1 2 1 3 1 4 1 5 1))
-(change 1 999 '(2 3 4 5 6 7))
-(change 1 999 '(1))
-(change 1 999 '())
-
-;;5.11
-
-  
