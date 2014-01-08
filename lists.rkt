@@ -84,5 +84,70 @@
 (change 1 999 '())
 
 ;;5.11
+(define  (my-equal l1 l2)
+  (if (null? l1)
+      (if (null? l2)
+          #t
+          #f)
+      (if (null? l2)
+          (if (null? l1)
+              #t
+              #f)
+          (if (eq? (car l1) (car l2))
+              (my-equal (cdr l1) (cdr l2))
+              #f))))
 
+(my-equal '(1 2 3) '(1 2 3))
+(my-equal '(1 2 3) '(4 5 6))
+(my-equal '(1 2 3) '(1 2))
+(my-equal '(1 2 3) '())
+(my-equal '() '(1 2 3))
+
+;;5.12
+(define (sum-lists l1 l2)
+  (cond ((null? l1) l2)
+        ((null? l2) l1)
+        (else (cons (+ (car l1) (car l2)) (sum-lists (cdr l1) (cdr l2))))))
+
+(sum-lists '(1 2 3 4) '(5 6 7))
+
+(define (sum-lists-iter l1 l2)
+  (define (iter ls1 ls2 res)
+    (cond ((null? ls1) (append res ls2))
+          ((null? ls2) (append res ls1))
+          (else (iter (cdr ls1) (cdr ls2) (append res (list (+ (car ls1) (car ls2)))))))
+    )
+  (iter l1 l2 '()))
+(sum-lists-iter '(1 2 3 4) '(5 6 7))
+
+;;5.13
+(define (map a-function a-list)
+  (if (null? a-list)
+      '()
+      (cons (a-function (car a-list))
+            (map a-function (cdr a-list)))))
+ 
+(define (combine-over-list op unity a-list)
+  (if (null? a-list)
+      unity
+      (op (car a-list)
+          (combine-over-list op unity (cdr a-list)))))
+
+(define (sq x) (* x x))
+
+(define (sum-of-sq l)
+  (combine-over-list + 0 (map sq l)))
+
+(sum-of-sq '(1 2 3 4 5))
+
+(define (my-and a b)
+  (and a b))
+
+(define (enkel-even l)
+  (combine-over-list my-and #t (map even? l)))
+
+(enkel-even '( 1 2 3 4 5))
+(enkel-even '( 2 4 6))
+
+;;5.14
   
