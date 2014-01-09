@@ -150,4 +150,134 @@
 (enkel-even '( 2 4 6))
 
 ;;5.14
+;;5.15.1
+(define (take-n l n)
+  (if (= 0 n) '()
+  (cons (car l) (take-n (cdr l) (- n 1)))))
+
+(take-n '(1 2 3 4 5) 2)
+
+(define (take-n-n ls1 ls2 n)
+  (append (take-n ls1 n) (take-n ls2 n)))
+
+(take-n-n '(1 2 3 4 5) '(6 7 8 9) 2)
+
+(define (tail-n l n)
+  (if (= 0 n) l
+      (tail-n (cdr l) (- n 1))))
+
+(tail-n '(1 2 3 4 5) 2)
+
+(define (merge-n ls1 ls2 n)
+  (cond ((< (length ls1) n) (append ls1 ls2))
+        ((< (length ls2) n) (append ls1 ls2))
+        (else (append (take-n-n ls1 ls2 n) (merge-n (tail-n ls1 n) (tail-n ls2 n) n)))))
+               
+(merge-n '(1 2 3 4 5) '(6 7 8 9) 2)
+(merge-n '(1 2 3 4 5) '(6 7 8 9) 3)
+(merge-n '(1 2) '(3 4 5 6) 4)
+
+;;5.15.2
+(define (merge-n-iter ls1 ls2 n)
+  (define (iter l1 l2 res n)
+    (cond ((< (length l1) n) (append res l1 l2 ))
+          ((< (length l2) n) (append res l1 l2 ))
+          (else (iter (tail-n l1 n) (tail-n l2 n) (append (take-n-n l1 l2 n) res) n))))
+  (iter ls1 ls2 '() n))
+               
+(merge-n-iter '(1 2 3 4 5) '(6 7 8 9) 2)
+(merge-n-iter '(1 2 3 4 5) '(6 7 8 9) 3)
+(merge-n-iter '(1 2) '(3 4 5 6) 4)
+  
+;;5.15.3
+(define (smaller-than-n? ls n)
+  (cond ((null? ls) #f)
+        ((< (length (car ls)) n) #t)
+        (else (smaller-than-n? (cdr ls) n))))
+
+(smaller-than-n? '((a b c d e f)
+                   (g)
+                   (r s t u v w))
+                 3)
+(smaller-than-n? '((a b c d e f)
+                   (g h i j k)
+                   (l m n o p q)
+                   (r s t u v w))
+                 3)
+
+(define (append-lists ls)
+  (if (null? ls) '()
+      (append (car ls) (append-lists (cdr ls)))))
+
+(append-lists '((a b c d e f)
+                   (g h i j k)
+                   (l m n o p q)
+                   (r s t u v w)))
+
+(define (tails-n lsts n)
+  (if (null? lsts) '()
+      (cons (tail-n (car lsts) n) (cdr lsts))))
+   
+(tails-n '((a b c d e f)
+                   (g h i j k)
+                   (l m n o p q)
+                   (r s t u v w)) 3)
+
+(define (takes-n lsts n)
+  (if (null? lsts) '()
+      (append (take-n (car lsts) n) (takes-n (cdr lsts) n))))
+
+(takes-n '((a b c d e f)
+                   (g h i j k)
+                   (l m n o p q)
+                   (r s t u v w)) 3)
+
+(define (super-merge-n lsts n)
+  (if (smaller-than-n? lsts n) (append-lists lsts)
+      (append (takes-n lsts n) (super-merge-n (tails-n lsts n) n))))
+      
+ (super-merge-n '((a b c d e f)
+                   (g h i j k)
+                   (l m n o p q)
+                   (r s t u v w)) 3)
+  
+ ;;5.24
+ ;;5.24.1
+ (define (get-korting aankoop kortingen)
+   (cond ((null? kortingen) 0)
+         ((eq? (car aankoop) (car (car kortingen))) (cadr (car kortingen)))
+         (else (get-korting aankoop (cdr kortingen)))))
+ 
+  (get-korting '(jas 100)
+          '((jas 50) (kleed 50) (rok 30) (trui 20)))
+  
+  (define (my-percent bedrag korting)
+    (- bedrag (* bedrag (/ korting 100))))
+  
+  (my-percent 100 25)
+  
+ (define (get-prijs aankopen kortingen)
+   (if (null? aankopen) '()
+       (cons (my-percent (cadr (car aankopen)) (get-korting (car aankopen) kortingen)) (get-prijs (cdr aankopen) kortingen)))) 
+ 
+ (get-prijs '((jas 100) (trui 25) (rok 70) (t-shirt 20))
+          '((jas 50) (kleed 50) (rok 30) (trui 20)))
+ 
+ (define (totaal aankoop korting)
+   (combine-over-list + 0 (get-prijs aankoop korting)))
+ 
+(totaal '((jas 100) (trui 25) (rok 70) (t-shirt 20))
+          '((jas 50) (kleed 50) (rok 30) (trui 20)))
+   
+ 
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
